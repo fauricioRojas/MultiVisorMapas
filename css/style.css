@@ -1,0 +1,16 @@
+body {
+    margin-top: 10px;
+}
+
+.hand {
+    cursor: pointer;
+}
+
+#headerWrapper {
+    width: 100%;
+    height: 50px;
+}
+
+.nav-wrapper {
+    margin-left: 910px;
+}
