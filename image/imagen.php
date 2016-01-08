@@ -2,33 +2,42 @@
     require './graficos.php';
     header('Content-Type: image/png');
     
-    $type = $_REQUEST['type'];    
-    $capa = $_REQUEST['capa'];
-    $trans = $_REQUEST['trans'];
-    $i = $_REQUEST['i'];
-    $j = $_REQUEST['j'];
+    //http://localhost:8000/image/imagen.php?type=POINT&strconn=host=localhost%20port=5432%20dbname=cursoGIS%20user=postgres&table=distritos&column=centroide&srid=5367&x=640&y=480&r=23&g=23&b=43&trans=10&zoom=0&despX=0&despY=0
     
-    $width = $_REQUEST['x'];
-    $height = $_REQUEST['y'];
-    $filas = $_REQUEST['rowsColumns'];
-    $columnas = $_REQUEST['rowsColumns'];
-    $zoom = $_REQUEST['zoom']; // 0.0 a 0.95
-    $despX = $_REQUEST['despX']; //-0.9 a 0.9 Se puede mas pero queda en blanco no se controla eso
-    $despY = $_REQUEST['despY']; //-0.9 a 0.9 Se puede mas pero queda en blanco no se controla eso
+    //http://localhost:8000/image/imagen.php?type=MULTIPOLYGON&strconn=host=localhost%20port=5432%20dbname=cursoGIS%20user=postgres&table=distritos&column=geom&srid=5367&x=640&y=480&r=23&g=23&b=43&trans=10&zoom=0&despX=0&despY=0
+    
+    //http://localhost:8000/image/imagen.php?type=MULTILINESTRING&strconn=host=localhost%20port=5432%20dbname=cursoGIS%20user=postgres&table=rios&column=geom&srid=5367&x=640&y=480&r=23&g=23&b=43&trans=10&zoom=0&despX=0&despY=0
+ 
+    
+    $type = $_REQUEST['type'];
+    
+    $strconn = $_REQUEST['strconn'];
+    $table = $_REQUEST['table'];
+    $column = $_REQUEST['column'];
+    $srid = $_REQUEST['srid'];
+    $largo = $_REQUEST['x'];
+    $ancho = $_REQUEST['y'];
+    $r = $_REQUEST['r'];
+    $g = $_REQUEST['g'];
+    $b = $_REQUEST['b'];   
+    $trans = $_REQUEST['trans'];   
+    $zoom = $_REQUEST['zoom'];
+    $despX = $_REQUEST['despX'];
+    $despY = $_REQUEST['despY'];
     
     $graficos = new graficos();
     
-    if($type == "Polygon")
+    if($type == "POLYGON" || $type == "MULTIPOLYGON")
     {
-        $img = $graficos->CreatePolygon($capa, $width, $height, $filas, $columnas, $trans, $zoom, $despX, $despY, $i, $j);
+        $img = $graficos->CreatePolygon($strconn, $table, $column, $srid, $largo, $ancho, $r, $g, $b, $trans, $zoom, $despX, $despY);
     }
-    if($type == "Point")
+    if($type == "POINT" || $type == "MULTIPOINT")
     {
-        $img = $graficos->CreatePoint($capa, $width, $height, $filas, $columnas, $trans, $zoom, $despX, $despY, $i, $j);
+        $img = $graficos->CreatePoint($strconn, $table, $column, $srid, $largo, $ancho, $r, $g, $b, $trans, $zoom, $despX, $despY);
     }
-    if($type == "Line")
+    if($type == "LINESTRING" || $type == "MULTILINESTRING")
     {
-        $img = $graficos->CreateLine($capa, $width, $height, $filas, $columnas, $trans, $zoom, $despX, $despY, $i, $j);
+        $img = $graficos->CreateLine($strconn, $table, $column, $srid, $largo, $ancho, $r, $g, $b, $trans, $zoom, $despX, $despY);
     }       
     
     imagepng($img);
