@@ -5,22 +5,10 @@
     .module('app', ['ngRoute', 'FBAngular'])
     .config(config)
     .controller('visorCtrl', function ($scope, $http, $location, Fullscreen) {
-        $scope.imageSize = 'x=500&y=400';
-        $scope.rowsColumns = '3';
+        $scope.size = 'x=500&y=400';
         $scope.despX = 0.0;
         $scope.despY = 0.0;
         $scope.zoom = 0.0;
-        /*$scope.mapas = [
-            {
-                id: 0,
-                state: false,
-                text: 'Distritos',
-                color: '0, 178, 48',
-                transparency: 10,
-                type: 'type=Polygon',
-                image: []
-            }
-        ];*/
         $scope.mapas;
 
         $scope.goFullscreen = goFullscreen;
@@ -52,7 +40,7 @@
         function generateImage() {
             angular.forEach($scope.mapas, function (value, key) {
                 if (value.state) {
-                    value.image = './image/imagen.php?type='+value.type+'&'+crearStrConn()+'&table='+value.schema+'.'+value.table+'&column='+value.column+'&srid='+value.srid+'&'+$scope.imageSize+'&r='+value.color.slice(0, 3)+'&g='+value.color.slice(4, 7)+'&b='+value.color.slice(8, 11)+'&trans='+value.transparency+'&zoom='+$scope.zoom+'&despX='+$scope.despX+'&despY='+$scope.despY; 
+                    value.image = './image/imagen.php?type='+value.type+'&'+crearStrConn()+'&table='+value.schema+'.'+value.table+'&column='+value.column+'&srid='+value.srid+'&'+$scope.size+'&r='+value.color.slice(0, 3)+'&g='+value.color.slice(4, 7)+'&b='+value.color.slice(8, 11)+'&trans='+value.transparency+'&zoom='+$scope.zoom+'&despX='+$scope.despX+'&despY='+$scope.despY; 
                 }
             });
         }
@@ -262,11 +250,11 @@
                 templateUrl: './image/image.html'
             })
             .when('/canvas', {
-                controller: 'visorController',
+                controller: 'visorCtrl',
                 templateUrl: './canvas/canvas.html'
             })
             .when('/svg', {
-                controller: 'visorController',
+                controller: 'visorCtrl',
                 templateUrl: './svg/svg.html'
             });
     }

@@ -1,6 +1,6 @@
 <div class="col-md-9">
     <div ng-repeat="mapa in mapas" style="position: absolute;">
-        <img src="{{mapa.image}}">
+        <img ng-if="mapa.state" src="{{mapa.image}}">
     </div>
 </div>
 
@@ -37,7 +37,7 @@
                 <tr>
                     <td>Tamaño</td>
                     <td colspan="2">
-                        <select class="form-control hand" ng-model="imageSize" ng-change="generateImage()">
+                        <select id="size" class="form-control hand" ng-model="size" ng-change="generateImage()">
                             <option value="x=500&y=400">500x400</option>
                             <option value="x=640&y=480">640x480</option>
                             <option value="x=760&y=600">760x600</option>
