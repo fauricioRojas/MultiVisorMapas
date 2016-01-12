@@ -210,10 +210,9 @@
             $http.get('./PHP/getTables.php?'+crearStrConn())
             .success(function(response) {
                 $scope.mapas = response;
+                addAttributes();
             });
-            
-            setTimeout(addAttributes, 2000);
-            
+                        
             $location.path('/image');
         };
         
