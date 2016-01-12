@@ -44,7 +44,7 @@
                 var canvas = document.getElementById('myCanvas1');
                 var context = canvas.getContext('2d');
                 var xmlhttp = new XMLHttpRequest();
-                var url = "../PHP/getJson.php?type=MULTIPOLYGON&table=distritos&column=geom";
+                var url = "../PHP/getJson.php?type=MULTIPOLYGON&scheme=public&table=distritos&column=geom";
 
                 xmlhttp.onreadystatechange = function() {
                     if (xmlhttp.readyState == 4 && xmlhttp.status == 200) {
@@ -61,7 +61,7 @@
                 var context = canvas.getContext('2d');
                 
                 var xmlhttp = new XMLHttpRequest();
-                var url = "../PHP/getJson.php?type=POINT&table=distritos&column=centroide";
+                var url = "../PHP/getJson.php?type=POINT&scheme=public&table=distritos&column=centroide";
 
                 xmlhttp.onreadystatechange = function() {
                     if (xmlhttp.readyState == 4 && xmlhttp.status == 200) {
@@ -94,7 +94,7 @@
             function llenarCanvas3(){
                 
                 var xmlhttp = new XMLHttpRequest();
-                var url = "../PHP/getJson.php?type=MULTILINESTRING&table=rios&column=geom";
+                var url = "../PHP/getJson.php?type=MULTILINESTRING&scheme=public&table=rios&column=geom";
 
                 xmlhttp.onreadystatechange = function() {
                     if (xmlhttp.readyState == 4 && xmlhttp.status == 200) {

@@ -5,7 +5,7 @@ require '../BD/Conexion.php';
 
 class graficos {      
     
-    function CreatePoint($strconn, $table, $column, $srid, $largo, $ancho, $r, $g, $b, $trans, $zoom, $despX, $despY)
+    function CreatePoint($strconn, $scheme, $table, $column, $srid, $largo, $ancho, $r, $g, $b, $trans, $zoom, $despX, $despY)
     {
         $conn = pg_connect($strconn) or die("Error de Conexion con la base de datos");
                 
@@ -19,18 +19,16 @@ class graficos {
         SELECT 	((st_x(st_geometryN(geom,1)) - medidas.xinicial) / medidas.factor) x,
                 ($ancho - ((st_y(st_geometryN(geom,1)) - medidas.yinicial) / medidas.factor)) y 
         FROM
-           (SELECT tab.$column as geom FROM $table tab
+           (SELECT tab.$column as geom FROM $scheme.\"$table\" tab
             WHERE st_intersects(
-                (SELECT st_setsrid(Box2D(st_buffer(p.centroide,((c.distancia-(c.distancia * $zoom ))/2))), $srid) geom FROM 
-                    (SELECT ST_GeomFROMText(st_astext(st_point(st_x(st_centroid(geom))-((st_x(st_centroid(geom))* $despX )/2) , st_y(st_centroid(geom))-((st_x(st_centroid(geom))* $despY )/2) )), $srid)  centroide FROM distritos WHERE gid = 302) p,
-                    (SELECT (max(st_xmax(geom))-min(st_xmin(geom))) distancia FROM distritos) c
+                (SELECT st_setsrid(Box2D(st_buffer(p.centroide,((375336.1936-(375336.1936 * $zoom ))/2))), $srid) geom FROM 
+                    (SELECT ST_GeomFROMText(st_astext(st_point( 470971.458311897-((470971.458311897 * $despX )/2) , 1072807.08034292-((470971.458311897 * $despY )/2) )), $srid) centroide) p
                 ), tab.$column)
            ) geometria,
            (SELECT min(st_xmin(geom)) xinicial, (max(st_xmax(geom))-min(st_xmin(geom)))/ $ancho factor, min(st_ymin(geom)) yinicial 
             FROM 
-               (SELECT st_setsrid(Box2D(st_buffer(p.centroide,((c.distancia-(c.distancia * $zoom ))/2))), $srid) geom FROM 
-                    (SELECT ST_GeomFROMText(st_astext(st_point(st_x(st_centroid(geom))-((st_x(st_centroid(geom))* $despX )/2) , st_y(st_centroid(geom))-((st_x(st_centroid(geom))* $despY )/2) )), $srid)  centroide FROM distritos WHERE gid = 302) p,
-                    (SELECT (max(st_xmax(geom))-min(st_xmin(geom))) distancia FROM distritos) c
+               (SELECT st_setsrid(Box2D(st_buffer(p.centroide,((375336.1936-(375336.1936 * $zoom ))/2))), $srid) geom FROM 
+                    (SELECT ST_GeomFROMText(st_astext(st_point( 470971.458311897-((470971.458311897 * $despX )/2) , 1072807.08034292-((470971.458311897 * $despY )/2) )), $srid) centroide) p
                ) c 
            ) medidas";
         
@@ -45,7 +43,7 @@ class graficos {
         return ($imagen);
     }
     
-    function CreatePolygon($strconn, $table, $column, $srid, $largo, $ancho, $r, $g, $b, $trans, $zoom, $despX, $despY)
+    function CreatePolygon($strconn, $scheme, $table, $column, $srid, $largo, $ancho, $r, $g, $b, $trans, $zoom, $despX, $despY)
     {
         $conn = pg_connect($strconn) or die("Error de Conexion con la base de datos");
                 
@@ -60,19 +58,17 @@ class graficos {
         FROM 
            (SELECT gid, st_x((ST_DumpPoints(geom)).geom) x, st_y((ST_DumpPoints(geom)).geom) y 
             FROM 
-               (SELECT gid, tab.$column geom FROM $table tab
+               (SELECT gid, tab.$column geom FROM $scheme.\"$table\" tab
                 WHERE st_intersects(
-                        (SELECT st_setsrid(Box2D(st_buffer(p.centroide,((c.distancia-(c.distancia * $zoom ))/2))), $srid ) geom FROM 
-                           (SELECT ST_GeomFROMText(st_astext(st_point( st_x(st_centroid(geom))-((st_x(st_centroid(geom))* $despX )/2) , st_y(st_centroid(geom))-((st_x(st_centroid(geom))* $despY )/2) )), $srid) centroide FROM distritos WHERE gid = 302) p,
-                           (SELECT (max(st_xmax(geom))-min(st_xmin(geom))) distancia FROM distritos) c
+                        (SELECT st_setsrid(Box2D(st_buffer(p.centroide,((375336.1936-(375336.1936 * $zoom ))/2))), $srid) geom FROM 
+                            (SELECT ST_GeomFROMText(st_astext(st_point( 470971.458311897-((470971.458311897 * $despX )/2) , 1072807.08034292-((470971.458311897 * $despY )/2) )), $srid) centroide) p
                         ), tab.$column)
                 ) s 
            ) geometria,
            (SELECT min(st_xmin(geom)) xinicial, (max(st_xmax(geom))-min(st_xmin(geom)))/$ancho factor,min(st_ymin(geom)) yinicial 
             FROM 
-               (SELECT st_setsrid( Box2D( st_buffer( p.centroide, ((c.distancia-(c.distancia * $zoom ))/2)) ), $srid ) geom FROM 
-                  (SELECT ST_GeomFROMText(st_astext(st_point( st_x(st_centroid(geom))-((st_x(st_centroid(geom))* $despX )/2) , st_y(st_centroid(geom))-((st_x(st_centroid(geom))* $despY )/2) )),$srid)  centroide FROM distritos WHERE gid = 302) p,
-                  (SELECT (max(st_xmax(geom))-min(st_xmin(geom))) distancia FROM distritos) c
+               (SELECT st_setsrid(Box2D(st_buffer(p.centroide,((375336.1936-(375336.1936 * $zoom ))/2))), $srid) geom FROM 
+                    (SELECT ST_GeomFROMText(st_astext(st_point( 470971.458311897-((470971.458311897 * $despX )/2) , 1072807.08034292-((470971.458311897 * $despY )/2) )), $srid) centroide) p
                ) c 
            ) medidas"; 
             
@@ -106,7 +102,7 @@ class graficos {
         return ($imagen);
     }
 
-    function CreateLine($strconn, $table, $column, $srid, $largo, $ancho, $r, $g, $b, $trans, $zoom, $despX, $despY)
+    function CreateLine($strconn, $scheme, $table, $column, $srid, $largo, $ancho, $r, $g, $b, $trans, $zoom, $despX, $despY)
     {
         $conn = pg_connect($strconn) or die("Error de Conexion con la base de datos");
                 
@@ -122,16 +118,14 @@ class graficos {
         FROM
           (SELECT min(st_xmin(geom)) xinicial, (max(st_xmax(geom))-min(st_xmin(geom)))/ $ancho factor,min(st_ymin(geom)) yinicial 
            FROM 
-             (SELECT st_setsrid(Box2D(st_buffer(p.centroide,((c.distancia-(c.distancia * $zoom ))/2))), $srid ) geom FROM 
-               (SELECT ST_GeomFROMText(st_astext(st_point( st_x(st_centroid(geom))-((st_x(st_centroid(geom))* $despX )/2) , st_y(st_centroid(geom))-((st_x(st_centroid(geom))* $despY )/2) )), $srid )  centroide FROM distritos WHERE gid = 302) p,
-               (SELECT (max(st_xmax(geom))-min(st_xmin(geom))) distancia FROM distritos) c
+             (SELECT st_setsrid(Box2D(st_buffer(p.centroide,((375336.1936-(375336.1936 * $zoom ))/2))), $srid) geom FROM 
+                (SELECT ST_GeomFROMText(st_astext(st_point( 470971.458311897-((470971.458311897 * $despX )/2) , 1072807.08034292-((470971.458311897 * $despY )/2) )), $srid) centroide) p
              ) c 
           ) medidas,
-          (SELECT gid ,((ST_DumpPoints((ST_GeometryN(tab.$column,1)))).$column) geom FROM $table tab
+          (SELECT gid ,((ST_DumpPoints((ST_GeometryN(tab.$column,1)))).$column) geom FROM $scheme.\"$table\" tab
            WHERE st_intersects(
-                (SELECT st_setsrid( Box2D( st_buffer( p.centroide, ((c.distancia-(c.distancia * $zoom ))/2)) ), $srid ) FROM 
-                   (SELECT ST_GeomFROMText(st_astext(st_point( st_x(st_centroid(geom))-((st_x(st_centroid(geom))* $despX )/2) , st_y(st_centroid(geom))-((st_x(st_centroid(geom))* $despY )/2) )),$srid )  centroide FROM distritos WHERE gid = 302) p,
-                   (SELECT (max(st_xmax(geom))-min(st_xmin(geom))) distancia FROM distritos) c
+                (SELECT st_setsrid(Box2D(st_buffer(p.centroide,((375336.1936-(375336.1936 * $zoom ))/2))), $srid) geom FROM 
+                    (SELECT ST_GeomFROMText(st_astext(st_point( 470971.458311897-((470971.458311897 * $despX )/2) , 1072807.08034292-((470971.458311897 * $despY )/2) )), $srid) centroide) p
                 ), tab.$column)
           ) geometria
         GROUP BY gid

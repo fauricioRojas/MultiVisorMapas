@@ -9,6 +9,7 @@ $despX = 0;
 $despY = 0;
 
 $type = $_GET['type'];
+$scheme = $_REQUEST['scheme'];
 $table = $_GET['table'];
 $column = $_GET['column'];
 
@@ -17,17 +18,17 @@ $json = new json();
 
 if($type == "POLYGON" || $type == "MULTIPOLYGON")
 {
-    $geojson = $json->jsonPolygon($strconn, $table, $column, $srid, $ancho, $zoom, $despX, $despY);
+    $geojson = $json->jsonPolygon($strconn, $scheme, $table, $column, $srid, $ancho, $zoom, $despX, $despY);
 }
 
 elseif($type == "POINT" || $type == "MULTIPOINT")
 {
-    $geojson = $json->jsonPoint($strconn, $table, $column, $srid, $ancho, $zoom, $despX, $despY);
+    $geojson = $json->jsonPoint($strconn, $scheme, $table, $column, $srid, $ancho, $zoom, $despX, $despY);
 }
 
 elseif($type == "LINESTRING" || $type == "MULTILINESTRING")
 {
-    $geojson = $json->jsonLine($strconn, $table, $column, $srid, $ancho, $zoom, $despX, $despY);
+    $geojson = $json->jsonLine($strconn, $scheme, $table, $column, $srid, $ancho, $zoom, $despX, $despY);
 }
 
 
