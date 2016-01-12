@@ -67,7 +67,7 @@
                 <div class="modal-content">
                     <div class="modal-header">
                         <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
-                        <h3><span class="glyphicon glyphicon-list"></span> Seleccione las capas a mostrar</h3>
+                        <h3><span><img src="icono/layer.png" height="25" width="25"></span> Seleccione las capas a mostrar</h3>
                     </div>
                     <div class="modal-body">
                         <div style="overflow-y:auto; height:450px">
@@ -107,7 +107,8 @@
                     <table class="table table-striped">
                         <thead>
                             <tr>
-                                <th colspan="5"><span class="glyphicon glyphicon-th-list"></span> Capas mostradas</th>
+                                <th colspan="4"><span class="glyphicon glyphicon-th-list"></span> Capas mostradas</th>
+                                <th title="Capas disponibles" colspan="1"><span class="hand" id="modalLayers" data-toggle="modal" data-target="#layers"><img src="icono/layer.png" height="25" width="25"></span></th>
                             </tr>
                         </thead>
                         <tbody>
@@ -120,12 +121,6 @@
                         <td><div style="width: 15px; height: 25px; background-color: rgb({{mapa.color}});"></div></td>
                         </tr>
                         </tbody>
-                        <tfoot>
-                            <tr>
-                                <td colspan="4"><b>Capas disponibles</b></td>
-                                <td><span id="modalLayers" class="glyphicon glyphicon-th-list hand" data-toggle="modal" data-target="#layers"></span></td>
-                            </tr>
-                        </tfoot>
                     </table>
                 </div>
                 <table class="table table-striped">

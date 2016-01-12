@@ -49,7 +49,7 @@
                 xmlhttp.onreadystatechange = function() {
                     if (xmlhttp.readyState == 4 && xmlhttp.status == 200) {
                         var json = JSON.parse(xmlhttp.responseText);
-                        context.fillPolygon(json, 'green','green');
+                        context.fillPolygon(json, '12,123,12','12,123,12');
                     }
                 };
                 xmlhttp.open("GET", url, true);
