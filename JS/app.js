@@ -40,7 +40,7 @@
         function generateImage() {
             angular.forEach($scope.mapas, function (value, key) {
                 if (value.state) {
-                    value.image = './image/imagen.php?type='+value.type+'&'+crearStrConn()+'&table='+value.schema+'.'+value.table+'&column='+value.column+'&srid='+value.srid+'&'+$scope.size+'&r='+value.color.slice(0, 3)+'&g='+value.color.slice(4, 7)+'&b='+value.color.slice(8, 11)+'&trans='+value.transparency+'&zoom='+$scope.zoom+'&despX='+$scope.despX+'&despY='+$scope.despY; 
+                    value.image = './image/imagen.php?type='+value.type+'&'+crearStrConn()+'&schema='+value.schema+'&table='+value.table+'&column='+value.column+'&srid='+value.srid+'&'+$scope.size+'&r='+value.color.slice(0, 3)+'&g='+value.color.slice(4, 7)+'&b='+value.color.slice(8, 11)+'&trans='+value.transparency+'&zoom='+$scope.zoom+'&despX='+$scope.despX+'&despY='+$scope.despY; 
                 }
             });
         }

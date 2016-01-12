@@ -1,6 +1,6 @@
 <div class="col-md-9">
     <div ng-repeat="mapa in mapas" style="position: absolute;">
-        <img ng-if="mapa.state" src="{{mapa.image}}">
+        <img ng-if="mapa.state" style="opacity: {{mapa.transparency}}" src="{{mapa.image}}">
     </div>
 </div>
 

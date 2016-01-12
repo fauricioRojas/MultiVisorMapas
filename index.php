@@ -48,13 +48,12 @@
                                 </div>
                             </div>
                         </form>
-                        <div ng-show="connectionStatus.show" ng-class="{'alert alert-success': connectionStatus.status, 'alert alert-danger': !connectionStatus.status}">
-                            <span class="glyphicon glyphicon-exclamation-sign" aria-hidden="true"></span>
-                            <span ng-show="connectionStatus.status">La conexión se ha realizado correctamente.</span>
-                            <span ng-show="!connectionStatus.status">No se puede conectar con el servidor.</span>
-                        </div>
                     </div>
                     <div class="modal-footer">
+                        <div class="col-md-8 row">
+                            <h4 class="text-left" ng-show="connectionStatus.show && connectionStatus.status"><span class="label label-success">La conexión se ha realizado correctamente.</span></h4>
+                            <h4 class="text-left" ng-show="connectionStatus.show && !connectionStatus.status"><span class="label label-warning">No se puede conectar con el servidor.</span></h4>
+                        </div>
                         <button class="btn btn-success" data-dismiss="modal" ng-disabled="!connectionStatus.status" ng-click="makeConnection()">
                             <span class="glyphicon glyphicon-circle-arrow-right"></span> Listo
                         </button>
