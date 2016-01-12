@@ -2,7 +2,7 @@
 
 class json{
     
-    function jsonPolygon($strconn, $scheme, $table, $column, $srid, $ancho, $zoom, $despX, $despY)
+    function jsonPolygon($strconn, $schema, $table, $column, $srid, $ancho, $zoom, $despX, $despY)
     {
         $conn = pg_connect($strconn) or die("Error de Conexion con la base de datos");
         
@@ -11,7 +11,7 @@ class json{
         FROM 
            (SELECT gid, st_x((ST_DumpPoints(geom)).geom) x, st_y((ST_DumpPoints(geom)).geom) y 
             FROM 
-               (SELECT gid, tab.$column geom FROM $scheme.\"$table\" tab
+               (SELECT gid, tab.$column geom FROM $schema.\"$table\" tab
                 WHERE st_intersects(
                         (SELECT st_setsrid(Box2D(st_buffer(p.centroide,((375336.1936-(375336.1936 * $zoom ))/2))), $srid) geom FROM 
                             (SELECT ST_GeomFROMText(st_astext(st_point( 470971.458311897-((470971.458311897 * $despX )/2) , 1072807.08034292-((470971.458311897 * $despY )/2) )), $srid) centroide) p
@@ -56,7 +56,7 @@ class json{
         return(json_encode($geojson));
     }
     
-    function jsonPoint($strconn, $scheme, $table, $column, $srid, $ancho, $zoom, $despX, $despY)
+    function jsonPoint($strconn, $schema, $table, $column, $srid, $ancho, $zoom, $despX, $despY)
     {
         $conn = pg_connect($strconn) or die("Error de Conexion con la base de datos");
         
@@ -64,7 +64,7 @@ class json{
         SELECT 	gid, ((st_x(st_geometryN(geom,1)) - medidas.xinicial) / medidas.factor) x,
                 ($ancho - ((st_y(st_geometryN(geom,1)) - medidas.yinicial) / medidas.factor)) y 
         FROM
-           (SELECT tab.gid, tab.$column as geom FROM $scheme.\"$table\" tab
+           (SELECT tab.gid, tab.$column as geom FROM $schema.\"$table\" tab
             WHERE st_intersects(
                 (SELECT st_setsrid(Box2D(st_buffer(p.centroide,((375336.1936-(375336.1936 * $zoom ))/2))), $srid) geom FROM 
                     (SELECT ST_GeomFROMText(st_astext(st_point( 470971.458311897-((470971.458311897 * $despX )/2) , 1072807.08034292-((470971.458311897 * $despY )/2) )), $srid) centroide) p
@@ -108,7 +108,7 @@ class json{
         return(json_encode($geojson));
     }
     
-    function jsonLine($strconn, $scheme, $table, $column, $srid, $ancho, $zoom, $despX, $despY)
+    function jsonLine($strconn, $schema, $table, $column, $srid, $ancho, $zoom, $despX, $despY)
     {
         $conn = pg_connect($strconn) or die("Error de Conexion con la base de datos");
         
@@ -122,7 +122,7 @@ class json{
                     (SELECT ST_GeomFROMText(st_astext(st_point( 470971.458311897-((470971.458311897 * $despX )/2) , 1072807.08034292-((470971.458311897 * $despY )/2) )), $srid) centroide) p
              ) c 
           ) medidas,
-          (SELECT gid ,((ST_DumpPoints((ST_GeometryN(tab.$column,1)))).$column) geom FROM $scheme.\"$table\" tab
+          (SELECT gid ,((ST_DumpPoints((ST_GeometryN(tab.$column,1)))).$column) geom FROM $schema.\"$table\" tab
            WHERE st_intersects(
                 (SELECT st_setsrid(Box2D(st_buffer(p.centroide,((375336.1936-(375336.1936 * $zoom ))/2))), $srid) geom FROM 
                     (SELECT ST_GeomFROMText(st_astext(st_point( 470971.458311897-((470971.458311897 * $despX )/2) , 1072807.08034292-((470971.458311897 * $despY )/2) )), $srid) centroide) p
