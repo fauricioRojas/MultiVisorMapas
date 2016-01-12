@@ -2,7 +2,7 @@
 
 /*
     LLAMADA DEL METODO:
-    getTables.php?strconn=host=localhost port=5432 dbname=cursoGIS user=postgres
+    getTables.php?strconn=host=localhost port=5432 dbname=cursoGIS user=postgres password=12345
  */
 
 $strconn = $_REQUEST['strconn'];

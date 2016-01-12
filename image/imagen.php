@@ -2,11 +2,11 @@
     require './graficos.php';
     header('Content-Type: image/png');
     
-    //http://localhost:8000/image/imagen.php?type=POINT&strconn=host=localhost%20port=5432%20dbname=cursoGIS%20user=postgres&table=distritos&column=centroide&srid=5367&x=640&y=480&r=23&g=23&b=43&trans=10&zoom=0&despX=0&despY=0
+    //http://localhost:8000/image/imagen.php?type=POINT&strconn=host=localhost%20port=5432%20dbname=cursoGIS%20user=postgres%20password=12345&table=distritos&column=centroide&srid=5367&x=640&y=480&r=23&g=23&b=43&trans=10&zoom=0&despX=0&despY=0
     
-    //http://localhost:8000/image/imagen.php?type=MULTIPOLYGON&strconn=host=localhost%20port=5432%20dbname=cursoGIS%20user=postgres&table=distritos&column=geom&srid=5367&x=640&y=480&r=23&g=23&b=43&trans=10&zoom=0&despX=0&despY=0
+    //http://localhost:8000/image/imagen.php?type=MULTIPOLYGON&strconn=host=localhost%20port=5432%20dbname=cursoGIS%20user=postgres%20password=12345&table=distritos&column=geom&srid=5367&x=640&y=480&r=23&g=23&b=43&trans=10&zoom=0&despX=0&despY=0
     
-    //http://localhost:8000/image/imagen.php?type=MULTILINESTRING&strconn=host=localhost%20port=5432%20dbname=cursoGIS%20user=postgres&table=rios&column=geom&srid=5367&x=640&y=480&r=23&g=23&b=43&trans=10&zoom=0&despX=0&despY=0
+    //http://localhost:8000/image/imagen.php?type=MULTILINESTRING&strconn=host=localhost%20port=5432%20dbname=cursoGIS%20user=postgres%20password=12345&table=rios&column=geom&srid=5367&x=640&y=480&r=23&g=23&b=43&trans=10&zoom=0&despX=0&despY=0
  
     
     $type = $_REQUEST['type'];

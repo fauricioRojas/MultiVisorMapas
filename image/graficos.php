@@ -76,6 +76,7 @@ class graficos {
                ) c 
            ) medidas"; 
             
+        
         $result = pg_query($conn, $query) or die("Error al ejecutar la consulta");
             
         $gid='';
