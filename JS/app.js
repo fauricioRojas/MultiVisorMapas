@@ -223,7 +223,7 @@
                 value.id =  i;
                 value.state = false;
                 value.color = generateColor();
-                value.transparency = 10;
+                value.transparency = 1;
                 
                 if($location.path() === '/image')
                     value.image = '';

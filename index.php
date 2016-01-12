@@ -80,10 +80,6 @@
                                         <th>Proyección</th>
                                         <th>Nombre</th>
                                         <th>Tipo</th>
-                                        <th>Zoom</th>
-                                        <th>Ordenar</th>
-                                        <th>Transparencia</th>
-                                        <th>Color</th>
                                     </tr>
                                 </thead>
                                 <tbody>
@@ -94,11 +90,6 @@
                                         <td>{{mapa.proj}}</td>
                                         <td>{{mapa.name}}</td>
                                         <td>{{mapa.type}}</td>
-                                        <td><center><span title="Zoom a la capa" class="glyphicon glyphicon-screenshot hand" ng-click="zoomMap(mapa)"></span></center></td>
-                                        <td><span style="float:left;" title="Subir capa" class="glyphicon glyphicon-chevron-up hand" ng-click="sortMap('up', mapa.id, mapa)"></span>
-                                            <span style="float:left;" title="Bajar capa" class="glyphicon glyphicon-chevron-down hand" ng-click="sortMap('down', mapa.id, mapa)"></span></td>
-                                        <td><input title="Transparencia" type="range" min="0" max="127" step="1" value="mapa.transparency" ng-model="mapa.transparency"></td>
-                                        <td><div style="width: 30px; height: 25px; background-color: rgb({{mapa.color}});"></div></td>
                                     </tr>
                                 </tbody>
                             </table>
@@ -127,6 +118,9 @@
             $('body').keypress(function(e){
                 if(e.which === 99){
                     document.getElementById('modalShow').click();
+                }
+                else if(e.which === 109){
+                    document.getElementById('modalLayers').click();
                 }
             });
         </script>
