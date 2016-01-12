@@ -5,7 +5,7 @@ require '../BD/Conexion.php';
 
 class graficos {      
     
-    function CreatePoint($strconn, $scheme, $table, $column, $srid, $largo, $ancho, $r, $g, $b, $trans, $zoom, $despX, $despY)
+    function CreatePoint($strconn, $schema, $table, $column, $srid, $largo, $ancho, $r, $g, $b, $trans, $zoom, $despX, $despY)
     {
         $conn = pg_connect($strconn) or die("Error de Conexion con la base de datos");
                 
@@ -19,7 +19,7 @@ class graficos {
         SELECT 	((st_x(st_geometryN(geom,1)) - medidas.xinicial) / medidas.factor) x,
                 ($ancho - ((st_y(st_geometryN(geom,1)) - medidas.yinicial) / medidas.factor)) y 
         FROM
-           (SELECT tab.$column as geom FROM $scheme.\"$table\" tab
+           (SELECT tab.$column as geom FROM $schema.\"$table\" tab
             WHERE st_intersects(
                 (SELECT st_setsrid(Box2D(st_buffer(p.centroide,((375336.1936-(375336.1936 * $zoom ))/2))), $srid) geom FROM 
                     (SELECT ST_GeomFROMText(st_astext(st_point( 470971.458311897-((470971.458311897 * $despX )/2) , 1072807.08034292-((470971.458311897 * $despY )/2) )), $srid) centroide) p
@@ -43,7 +43,7 @@ class graficos {
         return ($imagen);
     }
     
-    function CreatePolygon($strconn, $scheme, $table, $column, $srid, $largo, $ancho, $r, $g, $b, $trans, $zoom, $despX, $despY)
+    function CreatePolygon($strconn, $schema, $table, $column, $srid, $largo, $ancho, $r, $g, $b, $trans, $zoom, $despX, $despY)
     {
         $conn = pg_connect($strconn) or die("Error de Conexion con la base de datos");
                 
@@ -58,7 +58,7 @@ class graficos {
         FROM 
            (SELECT gid, st_x((ST_DumpPoints(geom)).geom) x, st_y((ST_DumpPoints(geom)).geom) y 
             FROM 
-               (SELECT gid, tab.$column geom FROM $scheme.\"$table\" tab
+               (SELECT gid, tab.$column geom FROM $schema.\"$table\" tab
                 WHERE st_intersects(
                         (SELECT st_setsrid(Box2D(st_buffer(p.centroide,((375336.1936-(375336.1936 * $zoom ))/2))), $srid) geom FROM 
                             (SELECT ST_GeomFROMText(st_astext(st_point( 470971.458311897-((470971.458311897 * $despX )/2) , 1072807.08034292-((470971.458311897 * $despY )/2) )), $srid) centroide) p
@@ -102,7 +102,7 @@ class graficos {
         return ($imagen);
     }
 
-    function CreateLine($strconn, $scheme, $table, $column, $srid, $largo, $ancho, $r, $g, $b, $trans, $zoom, $despX, $despY)
+    function CreateLine($strconn, $schema, $table, $column, $srid, $largo, $ancho, $r, $g, $b, $trans, $zoom, $despX, $despY)
     {
         $conn = pg_connect($strconn) or die("Error de Conexion con la base de datos");
                 
@@ -122,7 +122,7 @@ class graficos {
                 (SELECT ST_GeomFROMText(st_astext(st_point( 470971.458311897-((470971.458311897 * $despX )/2) , 1072807.08034292-((470971.458311897 * $despY )/2) )), $srid) centroide) p
              ) c 
           ) medidas,
-          (SELECT gid ,((ST_DumpPoints((ST_GeometryN(tab.$column,1)))).$column) geom FROM $scheme.\"$table\" tab
+          (SELECT gid ,((ST_DumpPoints((ST_GeometryN(tab.$column,1)))).$column) geom FROM $schema.\"$table\" tab
            WHERE st_intersects(
                 (SELECT st_setsrid(Box2D(st_buffer(p.centroide,((375336.1936-(375336.1936 * $zoom ))/2))), $srid) geom FROM 
                     (SELECT ST_GeomFROMText(st_astext(st_point( 470971.458311897-((470971.458311897 * $despX )/2) , 1072807.08034292-((470971.458311897 * $despY )/2) )), $srid) centroide) p
