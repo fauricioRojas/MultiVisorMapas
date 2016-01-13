@@ -38,11 +38,35 @@
          * @returns {undefined}
          */
         function generateImage() {
-            angular.forEach($scope.mapas, function (value, key) {
-                if (value.state) {
-                    value.image = './image/imagen.php?type='+value.type+'&'+crearStrConn()+'&schema='+value.schema+'&table='+value.table+'&column='+value.column+'&srid='+value.srid+'&'+$scope.size+'&r='+value.color.slice(0, 3)+'&g='+value.color.slice(4, 7)+'&b='+value.color.slice(8, 11)+'&trans='+value.transparency+'&zoom='+$scope.zoom+'&despX='+$scope.despX+'&despY='+$scope.despY; 
-                }
-            });
+            if($location.path() === '/image') {
+                angular.forEach($scope.mapas, function (value, key) {
+                    if (value.state) {
+                        value.image = './image/imagen.php?type='+value.type+'&'+crearStrConn()+'&schema='+value.schema+'&table='+value.table+'&column='+value.column+'&srid='+value.srid+'&'+$scope.size+'&r='+value.color.slice(0, 3)+'&g='+value.color.slice(4, 7)+'&b='+value.color.slice(8, 11)+'&trans='+value.transparency+'&zoom='+$scope.zoom+'&despX='+$scope.despX+'&despY='+$scope.despY; 
+                    }
+                });
+            }
+            else if($location.path() === '/canvas') {
+                angular.forEach($scope.mapas, function (value, key) {
+                    if(value.state) {
+                        console.log(value.type);
+                        if(value.type === 'LINESTRING' || value.type === 'MULTILINESTRING') {
+                            setTimeout(function() {
+                                drawMultiLineString(value);
+                            },3000);
+                        }
+                        else if(value.type === 'POINT' || value.type === 'MULTIPOINT') {
+                            setTimeout(function() {
+                                drawPoint(value);
+                            },3000);
+                        }
+                        else if (value.type === 'POLYGON' || value.type === 'MULTIPOLYGON') {
+                            setTimeout(function() {
+                                drawMultiPolygon(value);
+                            },3000);
+                        }
+                    }
+                });
+            }
         }
 
         /**
@@ -172,6 +196,111 @@
             return color.slice(0, color.length-1);
         }
         
+        /// --------------------------------------- CANVAS
+        $scope.drawMultiPolygon = drawMultiPolygon;
+        $scope.drawPoint = drawPoint;
+        $scope.drawLine = drawLine;
+        $scope.drawMultiLineString = drawMultiLineString;
+            
+        CanvasRenderingContext2D.prototype.drawPolygon = function (Json, fillColor, strokeColor) {
+            for(var j = 0; j < Json.length; j++) {
+                this.moveTo(Json[j].puntos[0].x, Json[j].puntos[0].y);
+
+                for (var i = 0; i < Json[j].puntos.length; i++) {
+                    this.lineTo(Json[j].puntos[i].x, Json[j].puntos[i].y);
+                }
+            }                
+
+            if (strokeColor != null && strokeColor != undefined)
+                this.strokeStyle = strokeColor;
+
+            if (fillColor != null && fillColor != undefined) {
+                this.fillStyle = fillColor;
+                this.fill();
+            }
+        };
+        
+        function drawMultiPolygon(capa){
+            var canvas = document.getElementById(capa.table);
+            console.log(canvas);
+            var context = canvas.getContext('2d');
+            
+            if(capa.puntos === null) {
+                $http.get('../PHP/getJson.php?type='+capa.type+'&schema='+capa.schema+'&table='+capa.table+'&column='+capa.column+'&srid='+capa.srid+'&'+$scope.size+'&zoom='+$scope.zoom+'&despX='+$scope.despX+'&despY='+$scope.despY)
+                .success(function(response) {
+                    capa.puntos = response;
+                    console.log(capa.puntos);
+                    context.drawPolygon(capa.puntos, capa.color, capa.color);
+                });
+            }
+            else {
+                context.drawPolygon(capa.puntos, capa.color, capa.color);
+            }
+        }
+        
+        function runJsonPoint(capa) {
+            var canvas = document.getElementById(capa.table);
+            var context = canvas.getContext('2d');
+            
+            for(var i = 0; i < capa.puntos.length; i++)
+            {
+                for (var j = 0; j < capa.puntos[i].puntos.length; j++) 
+                {
+                    context.beginPath();
+                    context.arc(capa.puntos[i].puntos[j].x, capa.puntos[i].puntos[j].y, 2, 0, 2*Math.PI);
+                    context.fillStyle = 'rgb('+capa.color+')';
+                    context.fill();
+                }
+            }
+        }
+        function drawPoint(capa){            
+            if(capa.puntos === null) {
+                $http.get('../PHP/getJson.php?type='+capa.type+'&schema='+capa.schema+'&table='+capa.table+'&column='+capa.column+'&srid='+capa.srid+'&'+$scope.size+'&zoom='+$scope.zoom+'&despX='+$scope.despX+'&despY='+$scope.despY)
+                .success(function(response) {
+                    capa.puntos = response;
+                    runJsonPoint(capa);
+                });
+            }
+            else {
+                runJsonPoint(capa);
+            }
+        }
+
+        function drawLine(table, color, xi, yi, xf, yf) {
+            var canvas = document.getElementById(table);
+            console.log(canvas);
+            var ctx = canvas.getContext('2d');
+            ctx.beginPath();
+            ctx.moveTo(xi, yi);
+            ctx.lineTo(xf, yf);
+            ctx.strokeStyle = 'rgb('+color+')';
+            ctx.stroke();
+        }
+        
+        function runJsonMultiLineString(capa) {
+            console.log(capa);
+            for(var i = 0; i < capa.puntos.length; i++) {
+                for (var j = 0; j < capa.puntos[i].puntosx.length-1; j++)  {
+                    drawLine(capa.table, capa.color, capa.puntos[i].puntosx[j], capa.puntos[i].puntosy[j], capa.puntos[i].puntosx[j+1], capa.puntos[i].puntosy[j+1]);
+                }
+            }
+        }
+        
+        function drawMultiLineString(capa) {
+            if(capa.puntos === null){
+                console.log('E');
+                $http.get('../PHP/getJson.php?type='+capa.type+'&schema='+capa.schema+'&table='+capa.table+'&column='+capa.column+'&srid='+capa.srid+'&'+$scope.size+'&zoom='+$scope.zoom+'&despX='+$scope.despX+'&despY='+$scope.despY)
+                .success(function(response) {
+                    capa.puntos = response;
+                    console.log(capa.puntos);
+                    runJsonMultiLineString(capa);
+                });
+            }
+            else {
+                runJsonMultiLineString(capa);
+            }
+        }
+        
         /// --------------------------------------- PROBAR CONEXION
         $scope.strconn = {
             host: 'localhost',
@@ -212,7 +341,6 @@
                 $scope.mapas = response;
                 addAttributes();
             });
-                        
             $location.path('/image');
         };
         
@@ -223,6 +351,7 @@
                 value.state = false;
                 value.color = generateColor();
                 value.transparency = 1;
+                value.puntos = null;
                 
                 if($location.path() === '/image')
                     value.image = '';
