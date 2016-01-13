@@ -1,0 +1,166 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <meta charset="UTF-8">
+        <title>Canvas</title>
+        
+        <script>            
+            function escribeCoordenadas(canvas, coordenadas){
+                var context = canvas.getContext('2d');
+                context.clearRect(0, 460, canvas.width, canvas.height);
+                context.font = '11pt Calibri';
+                context.fillStyle = 'gray';
+                context.fillText(coordenadas, 10, 470);
+            }
+            
+            function obtenerCoordenadas(canvas, evt){
+                var rect = canvas.getBoundingClientRect();
+                return {x: evt.clientX - rect.left, y: evt.clientY - rect.top}
+            }
+            
+            CanvasRenderingContext2D.prototype.fillPolygon = function (Json, fillColor, strokeColor) 
+            {
+                for(var j = 0; j < Json.length; j++)
+                {
+                    this.moveTo(Json[j].puntos[0].x, Json[j].puntos[0].y);
+                    
+                    for (var i = 0; i < Json[j].puntos.length; i++) 
+                    {
+                        this.lineTo(Json[j].puntos[i].x, Json[j].puntos[i].y);
+                    }
+                }                
+                
+                if (strokeColor != null && strokeColor != undefined)
+                    this.strokeStyle = strokeColor;
+
+                if (fillColor != null && fillColor != undefined) {
+                    this.fillStyle = fillColor;
+                    this.fill();
+                }
+            };
+            
+            
+            function llenarCanvas1(){
+                var canvas = document.getElementById('myCanvas1');
+                var context = canvas.getContext('2d');
+                var xmlhttp = new XMLHttpRequest();
+                var url = "../PHP/getJson.php?type=MULTIPOLYGON&schema=public&table=distritos&column=geom";
+
+                xmlhttp.onreadystatechange = function() {
+                    if (xmlhttp.readyState == 4 && xmlhttp.status == 200) {
+                        var json = JSON.parse(xmlhttp.responseText);
+                        context.fillPolygon(json, '12,123,12','12,123,12');
+                    }
+                };
+                xmlhttp.open("GET", url, true);
+                xmlhttp.send();
+            }
+            
+            function llenarCanvas2(){
+                var canvas = document.getElementById('myCanvas2');
+                var context = canvas.getContext('2d');
+                
+                var xmlhttp = new XMLHttpRequest();
+                var url = "../PHP/getJson.php?type=POINT&schema=public&table=distritos&column=centroide";
+
+                xmlhttp.onreadystatechange = function() {
+                    if (xmlhttp.readyState == 4 && xmlhttp.status == 200) {
+                        var json = JSON.parse(xmlhttp.responseText);
+                        
+                        for(var i = 0; i < json.length; i++)
+                        {
+                            for (var j = 0; j < json[i].puntos.length; j++) 
+                            {
+                                context.beginPath();
+                                context.arc(json[i].puntos[j].x, json[i].puntos[j].y, 2, 0, 2*Math.PI);
+                                context.fill();
+                            }
+                        }
+                    }
+                };
+                xmlhttp.open("GET", url, true);
+                xmlhttp.send();
+            }
+            
+            function drawLine(xi, yi, xf, yf) {
+                var canvas = document.getElementById('myCanvas3');
+                var ctx = canvas.getContext('2d');
+                ctx.beginPath();
+                ctx.moveTo(xi, yi);
+                ctx.lineTo(xf, yf);
+                ctx.stroke();
+            }
+            
+            function llenarCanvas3(){
+                
+                var xmlhttp = new XMLHttpRequest();
+                var url = "../PHP/getJson.php?type=MULTILINESTRING&schema=public&table=rios&column=geom";
+
+                xmlhttp.onreadystatechange = function() {
+                    if (xmlhttp.readyState == 4 && xmlhttp.status == 200) {
+                        var json = JSON.parse(xmlhttp.responseText);
+                        
+                        
+                        for(var i = 0; i < json.length; i++)
+                        {
+                            for (var j = 0; j < json[i].puntosx.length-1; j++) 
+                            {
+                                drawLine(json[i].puntosx[j], json[i].puntosy[j], json[i].puntosx[j+1], json[i].puntosy[j+1]);
+                            }
+                        }
+                    }
+                };
+                xmlhttp.open("GET", url, true);
+                xmlhttp.send();
+            }
+            
+        </script>       
+        
+        
+    </head>
+    <body ng-app="app" ng-controller="visorController">
+        
+        <canvas onclick="llenarCanvas1()" id="myCanvas1" width="640" height="480" style="border: 1px solid #a1a1a1;">            
+        </canvas>    
+        
+        <canvas onclick="llenarCanvas2()" id="myCanvas2" width="640" height="480" style="border: 1px solid #a1a1a1;">            
+        </canvas>    
+        
+        <canvas onclick="llenarCanvas3()" id="myCanvas3" width="640" height="480" style="border: 1px solid #a1a1a1;">            
+        </canvas>    
+        
+        
+        <script>        
+        var canvas = document.getElementById("myCanvas1");
+        var context = canvas.getContext('2d');
+        canvas.addEventListener('mousemove',
+                function(evt){
+                    var mousePos = obtenerCoordenadas(canvas, evt);
+                    var coordenadas = "Coordenada: "+ mousePos.x+", "+mousePos.y;
+                    escribeCoordenadas(canvas, coordenadas);
+                },
+                false); 
+                
+        var canvas2 = document.getElementById("myCanvas2");
+        var context = canvas2.getContext('2d');
+        canvas2.addEventListener('mousemove',
+                function(evt){
+                    var mousePos = obtenerCoordenadas(canvas2, evt);
+                    var coordenadas = "Coordenada: "+ mousePos.x+", "+mousePos.y;
+                    escribeCoordenadas(canvas2, coordenadas);
+                },
+                false); 
+                
+        var canvas3 = document.getElementById("myCanvas3");
+        var context = canvas3.getContext('2d');
+        canvas3.addEventListener('mousemove',
+                function(evt){
+                    var mousePos = obtenerCoordenadas(canvas3, evt);
+                    var coordenadas = "Coordenada: "+ mousePos.x+", "+mousePos.y;
+                    escribeCoordenadas(canvas3, coordenadas);
+                },
+                false); 
+        </script>
+        
+    </body>
+</html>
