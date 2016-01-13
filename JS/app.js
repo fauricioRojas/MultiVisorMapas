@@ -132,7 +132,7 @@
                 }
             }
         }
-
+        
         /**
          * Esta funcion se encarga del desplazamiento de las capas.
          * @param {type} way: Forma del desplazamiento.
@@ -155,8 +155,10 @@
                 $scope.despX = 0.0;
                 $scope.despY = 0.0;
             }
-
-            generateImage();
+            if($location.path() === '/image')
+                generateImage();
+            else if($location.path() === '/canvas')
+                refreshJson();            
         }
 
         /**
@@ -166,14 +168,12 @@
          */
         function zoomMap(mapa) {
             $scope.zoom = -0.1;
+            
             generateImage();
             removeMap(mapa);
             $scope.mapas.splice($scope.mapas.length, 0, mapa);
             resetIdToMap();
         }
-        
-        
-        
         
         function generateColor() {
             var letters = '0123456789'.split('');
@@ -224,6 +224,7 @@
             var context = canvas.getContext('2d');
             
             if(capa.puntos === null) {
+                console.log("Consulto json de "+capa.table+"_"+capa.column);
                 $http.get('../PHP/getJson.php?type='+capa.type+'&schema='+capa.schema+'&table='+capa.table+'&column='+capa.column+'&srid='+capa.srid+'&'+$scope.size+'&zoom='+$scope.zoom+'&despX='+$scope.despX+'&despY='+$scope.despY)
                 .success(function(response) {
                     capa.puntos = response;
@@ -231,6 +232,7 @@
                 });
             }
             else {
+                console.log("Consulto json creado de "+capa.table+"_"+capa.column);
                 context.drawPolygon(capa.puntos, 'rgb('+capa.color+')', 'rgb('+capa.color+')');
             }
         }
@@ -254,7 +256,7 @@
         
         function drawPoint(capa){            
             if(capa.puntos === null) {
-                console.log("cargo nueva po capa");
+                console.log("Consulto json de "+capa.table+"_"+capa.column);
                 $http.get('../PHP/getJson.php?type='+capa.type+'&schema='+capa.schema+'&table='+capa.table+'&column='+capa.column+'&srid='+capa.srid+'&'+$scope.size+'&zoom='+$scope.zoom+'&despX='+$scope.despX+'&despY='+$scope.despY)
                 .success(function(response) {
                     capa.puntos = response;
@@ -262,14 +264,13 @@
                 });
             }
             else {
-                console.log("cargo po capa");
+                console.log("Consulto json creado de "+capa.table+"_"+capa.column);
                 runJsonPoint(capa);
             }
         }
 
         function drawLine(table, color, xi, yi, xf, yf) {
             var canvas = document.getElementById(table);
-            console.log(canvas);
             var ctx = canvas.getContext('2d');
             ctx.beginPath();
             ctx.moveTo(xi, yi);
@@ -288,7 +289,7 @@
         
         function drawMultiLineString(capa) {
             if(capa.puntos === null){
-                console.log("cargo nueva l capa");
+                console.log("Consulto json de "+capa.table+"_"+capa.column);
                 $http.get('../PHP/getJson.php?type='+capa.type+'&schema='+capa.schema+'&table='+capa.table+'&column='+capa.column+'&srid='+capa.srid+'&'+$scope.size+'&zoom='+$scope.zoom+'&despX='+$scope.despX+'&despY='+$scope.despY)
                 .success(function(response) {
                     capa.puntos = response;
@@ -296,7 +297,7 @@
                 });
             }
             else {
-                console.log("cargo l capa");
+                console.log("Consulto json creado de "+capa.table+"_"+capa.column);
                 runJsonMultiLineString(capa);
             }
         }
@@ -304,10 +305,21 @@
         function delayForLayers() {
             setTimeout(function() {
                 generateImage();
-            }, 500);
+            }, 300);
         }
         
-        
+        function refreshJson(){
+            angular.forEach($scope.mapas, function (value, key) {
+                if(value.puntos !== null)
+                {
+                    value.puntos = null;
+                    var canvas = document.getElementById(value.table+"_"+value.column);                    
+                    var context = canvas.getContext('2d');
+                    context.clearRect(0, 0, canvas.width, canvas.height);
+                    generateImage();
+                }
+            });
+        }
         
         
         /// --------------------------------------- PROBAR CONEXION
