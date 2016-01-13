@@ -1,3 +1,3 @@
 <div ng-repeat="mapa in mapas" style="position: absolute;">
-    <canvas ng-if="mapa.state" id="{{mapa.table}}" width="640" height="480" style="border: 1px solid #a1a1a1;"></canvas> 
+    <canvas ng-show="mapa.state" id="{{mapa.table}}_{{mapa.column}}" width="640" height="480" style="width:100%;border:3px groove #0455BF;padding:3px; opacity: {{mapa.transparency}}"></canvas> 
 </div>   

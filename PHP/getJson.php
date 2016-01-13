@@ -2,16 +2,16 @@
 
 $strconn = "host=localhost port=5432 dbname=cursoGIS user=postgres password=12345";
 
-$srid = 5367;
-$ancho = 480;  
-$zoom = 0;
-$despX = 0;
-$despY = 0;
 
 $type = $_GET['type'];
 $schema = $_REQUEST['schema'];
 $table = $_GET['table'];
 $column = $_GET['column'];
+$srid = $_REQUEST['srid'];
+$ancho = $_REQUEST['y'];  
+$zoom = $_REQUEST['zoom'];
+$despX = $_REQUEST['despX'];
+$despY = $_REQUEST['despY'];
 
 require './json.php';
 $json = new json();

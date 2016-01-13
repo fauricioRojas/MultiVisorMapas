@@ -77,6 +77,7 @@
                                         <th></th>
                                         <th>Schema</th>
                                         <th>Capa</th>
+                                        <th>Columna</th>
                                         <th>Proyección</th>
                                         <th>Nombre</th>
                                         <th>Tipo</th>
@@ -87,6 +88,7 @@
                                         <td><input class="hand" type="checkbox" ng-click="showHideMap(mapa.id)"></td>
                                         <td>{{mapa.schema}}</td>
                                         <td>{{mapa.table}}</td>
+                                        <td>{{mapa.column}}</td>
                                         <td>{{mapa.proj}}</td>
                                         <td>{{mapa.name}}</td>
                                         <td>{{mapa.type}}</td>
@@ -133,17 +135,17 @@
                         <tr>
                             <td>
                                 <ul class="nav nav-pills">
-                                    <li ng-class="{active: nav.isActive('/image')}"><a href="#/image">Image</a></li>
+                                    <li ng-click="delayForLayers()" ng-class="{active: nav.isActive('/image')}"><a href="#/image">Image</a></li>
                                 </ul>
                             </td>
                             <td>
                                 <ul class="nav nav-pills">
-                                    <li ng-class="{active: nav.isActive('/canvas')}"><a href="#/canvas">Canvas</a></li>
+                                    <li ng-click="delayForLayers()" ng-class="{active: nav.isActive('/canvas')}"><a href="#/canvas">Canvas</a></li>
                                 </ul>
                             </td>
                             <td>
                                 <ul class="nav nav-pills">
-                                    <li ng-class="{active: nav.isActive('/svg')}"><a href="#/svg">SVG</a></li>
+                                    <li ng-click="delayForLayers()" ng-class="{active: nav.isActive('/svg')}"><a href="#/svg">SVG</a></li>
                                 </ul>
                             </td>
                         </tr>

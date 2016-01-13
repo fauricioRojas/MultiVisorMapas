@@ -21,6 +21,7 @@
         $scope.displacement = displacement;
         $scope.zoomMap = zoomMap;
         $scope.generateColor = generateColor;
+        $scope.delayForLayers = delayForLayers;
         
         /**
          * Esta funcion se encarga de llevar a cabo el fullscreen del visor.
@@ -48,21 +49,14 @@
             else if($location.path() === '/canvas') {
                 angular.forEach($scope.mapas, function (value, key) {
                     if(value.state) {
-                        console.log(value.type);
                         if(value.type === 'LINESTRING' || value.type === 'MULTILINESTRING') {
-                            setTimeout(function() {
-                                drawMultiLineString(value);
-                            },3000);
+                            drawMultiLineString(value);
                         }
                         else if(value.type === 'POINT' || value.type === 'MULTIPOINT') {
-                            setTimeout(function() {
-                                drawPoint(value);
-                            },3000);
+                            drawPoint(value);
                         }
                         else if (value.type === 'POLYGON' || value.type === 'MULTIPOLYGON') {
-                            setTimeout(function() {
-                                drawMultiPolygon(value);
-                            },3000);
+                            drawMultiPolygon(value);
                         }
                     }
                 });
@@ -178,6 +172,9 @@
             resetIdToMap();
         }
         
+        
+        
+        
         function generateColor() {
             var letters = '0123456789'.split('');
             var color = '';
@@ -202,7 +199,8 @@
         $scope.drawLine = drawLine;
         $scope.drawMultiLineString = drawMultiLineString;
             
-        CanvasRenderingContext2D.prototype.drawPolygon = function (Json, fillColor, strokeColor) {
+        CanvasRenderingContext2D.prototype.drawPolygon = function (Json, fillColor, strokeColor) 
+        {
             for(var j = 0; j < Json.length; j++) {
                 this.moveTo(Json[j].puntos[0].x, Json[j].puntos[0].y);
 
@@ -220,26 +218,26 @@
             }
         };
         
-        function drawMultiPolygon(capa){
-            var canvas = document.getElementById(capa.table);
-            console.log(canvas);
+        function drawMultiPolygon(capa)
+        {
+            var canvas = document.getElementById(capa.table+"_"+capa.column);
             var context = canvas.getContext('2d');
             
             if(capa.puntos === null) {
                 $http.get('../PHP/getJson.php?type='+capa.type+'&schema='+capa.schema+'&table='+capa.table+'&column='+capa.column+'&srid='+capa.srid+'&'+$scope.size+'&zoom='+$scope.zoom+'&despX='+$scope.despX+'&despY='+$scope.despY)
                 .success(function(response) {
                     capa.puntos = response;
-                    console.log(capa.puntos);
-                    context.drawPolygon(capa.puntos, capa.color, capa.color);
+                    context.drawPolygon(capa.puntos, 'rgb('+capa.color+')', 'rgb('+capa.color+')');
                 });
             }
             else {
-                context.drawPolygon(capa.puntos, capa.color, capa.color);
+                context.drawPolygon(capa.puntos, 'rgb('+capa.color+')', 'rgb('+capa.color+')');
             }
         }
         
-        function runJsonPoint(capa) {
-            var canvas = document.getElementById(capa.table);
+        function runJsonPoint(capa) 
+        {
+            var canvas = document.getElementById(capa.table+"_"+capa.column);
             var context = canvas.getContext('2d');
             
             for(var i = 0; i < capa.puntos.length; i++)
@@ -253,8 +251,10 @@
                 }
             }
         }
+        
         function drawPoint(capa){            
             if(capa.puntos === null) {
+                console.log("cargo nueva po capa");
                 $http.get('../PHP/getJson.php?type='+capa.type+'&schema='+capa.schema+'&table='+capa.table+'&column='+capa.column+'&srid='+capa.srid+'&'+$scope.size+'&zoom='+$scope.zoom+'&despX='+$scope.despX+'&despY='+$scope.despY)
                 .success(function(response) {
                     capa.puntos = response;
@@ -262,6 +262,7 @@
                 });
             }
             else {
+                console.log("cargo po capa");
                 runJsonPoint(capa);
             }
         }
@@ -278,28 +279,36 @@
         }
         
         function runJsonMultiLineString(capa) {
-            console.log(capa);
             for(var i = 0; i < capa.puntos.length; i++) {
                 for (var j = 0; j < capa.puntos[i].puntosx.length-1; j++)  {
-                    drawLine(capa.table, capa.color, capa.puntos[i].puntosx[j], capa.puntos[i].puntosy[j], capa.puntos[i].puntosx[j+1], capa.puntos[i].puntosy[j+1]);
+                    drawLine(capa.table+"_"+capa.column, capa.color, capa.puntos[i].puntosx[j], capa.puntos[i].puntosy[j], capa.puntos[i].puntosx[j+1], capa.puntos[i].puntosy[j+1]);
                 }
             }
         }
         
         function drawMultiLineString(capa) {
             if(capa.puntos === null){
-                console.log('E');
+                console.log("cargo nueva l capa");
                 $http.get('../PHP/getJson.php?type='+capa.type+'&schema='+capa.schema+'&table='+capa.table+'&column='+capa.column+'&srid='+capa.srid+'&'+$scope.size+'&zoom='+$scope.zoom+'&despX='+$scope.despX+'&despY='+$scope.despY)
                 .success(function(response) {
                     capa.puntos = response;
-                    console.log(capa.puntos);
                     runJsonMultiLineString(capa);
                 });
             }
             else {
+                console.log("cargo l capa");
                 runJsonMultiLineString(capa);
             }
         }
+        
+        function delayForLayers() {
+            setTimeout(function() {
+                generateImage();
+            }, 500);
+        }
+        
+        
+        
         
         /// --------------------------------------- PROBAR CONEXION
         $scope.strconn = {
