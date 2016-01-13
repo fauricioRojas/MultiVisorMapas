@@ -101,27 +101,30 @@
             </div>
         </div>
 
-        <div class="col-md-9" ng-view></div>
+        <div class="col-md-8" ng-view></div>
 
-        <div class="col-md-3">
+        <div class="col-md-4  row">
             <div class="col-md-12">
                 <div class="col-md-12" style="overflow-y:auto; height:188px;">
                     <table class="table table-striped">
                         <thead>
                             <tr>
-                                <th colspan="4"><span class="glyphicon glyphicon-th-list"></span> Capas mostradas</th>
+                                <th colspan="5"><span class="glyphicon glyphicon-th-list"></span> Capas mostradas</th>
                                 <th title="Capas disponibles" colspan="1"><span class="hand" id="modalLayers" data-toggle="modal" data-target="#layers"><img src="icono/layer.png" height="25" width="25"></span></th>
                             </tr>
                         </thead>
                         <tbody>
                             <tr ng-repeat="mapa in mapas" ng-if="mapa.state">
+                                <td><img width="20" height="20" ng-if="mapa.type === 'MULTILINESTRING' || mapa.type === 'LINESTRING'" src="./icono/line.png">
+                                    <img width="20" height="20" ng-if="mapa.type === 'MULTIPOLYGON' || mapa.type === 'POLYGON'" src="./icono/polygon.png">
+                                    <img width="20" height="20" ng-if="mapa.type === 'MULTIPOINT' || mapa.type === 'POINT'" src="./icono/point.png"></td>
                                 <td>{{mapa.table}}</td>
                                 <td><center><span title="Zoom a la capa" class="glyphicon glyphicon-screenshot hand" ng-click="zoomMap(mapa)"></span></center></td>
-                        <td><span style="float:left;" title="Subir capa" class="glyphicon glyphicon-chevron-up hand" ng-click="sortMap('up', mapa.id, mapa)"></span>
-                            <span style="float:left;" title="Bajar capa" class="glyphicon glyphicon-chevron-down hand" ng-click="sortMap('down', mapa.id, mapa)"></span></td>
-                        <td><input title="Transparencia" type="range" min="0" max="1" step="0.1" value="mapa.transparency" ng-model="mapa.transparency"></td>
-                        <td><div style="width: 15px; height: 25px; background-color: rgb({{mapa.color}});"></div></td>
-                        </tr>
+                                <td><span style="float:left;" title="Subir capa" class="glyphicon glyphicon-chevron-up hand" ng-click="sortMap('up', mapa.id, mapa)"></span>
+                                    <span style="float:left;" title="Bajar capa" class="glyphicon glyphicon-chevron-down hand" ng-click="sortMap('down', mapa.id, mapa)"></span></td>
+                                <td><input title="Transparencia" type="range" min="0" max="1" step="0.1" value="mapa.transparency" ng-model="mapa.transparency"></td>
+                                <td><div style="width: 15px; height: 25px; background-color: rgb({{mapa.color}});"></div></td>
+                            </tr>
                         </tbody>
                     </table>
                 </div>
