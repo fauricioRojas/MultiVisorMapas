@@ -166,7 +166,7 @@
                         </tr>
                         <tr>
                             <td>Zoom</td>                                
-                            <td colspan="2"><center><input class="hand" type="range" min="0" max="0.9" step="0.1" value="0" ng-model="zoom" ng-change="generateImage();"></center></td>
+                            <td colspan="2"><center><input class="hand" type="range" min="0" max="0.9" step="0.1" value="0" ng-model="zoom" ng-change="makeZoom();"></center></td>
                     </tr>
                     <tr>
                         <td>Fullscreen</td>

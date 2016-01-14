@@ -22,6 +22,7 @@
         $scope.zoomMap = zoomMap;
         $scope.generateColor = generateColor;
         $scope.delayForLayers = delayForLayers;
+        $scope.makeZoom = makeZoom;
         
         /**
          * Esta funcion se encarga de llevar a cabo el fullscreen del visor.
@@ -39,6 +40,7 @@
          * @returns {undefined}
          */
         function generateImage() {
+            setSize();
             if($location.path() === '/image') {
                 angular.forEach($scope.mapas, function (value, key) {
                     if (value.state) {
@@ -155,11 +157,17 @@
                 $scope.despX = 0.0;
                 $scope.despY = 0.0;
             }
-            if($location.path() === '/image')
-                generateImage();
-            else if($location.path() === '/canvas')
-                refreshJson();            
+            
+            refreshJson();
+            generateImage();
+                
         }
+        
+        function makeZoom()
+        {
+            refreshJson();
+            generateImage();
+        } 
 
         /**
          * Esta funcion se encarga de hacer el zoom a la capa.
@@ -302,6 +310,12 @@
             }
         }
         
+        function setSize() {
+            var size = $scope.size.split('&');
+            $scope.width = size[0].slice(2, size[0].length);
+            $scope.height = size[1].slice(2, size[1].length);
+        }
+        
         function delayForLayers() {
             setTimeout(function() {
                 generateImage();
@@ -313,12 +327,16 @@
                 if(value.puntos !== null)
                 {
                     value.puntos = null;
-                    var canvas = document.getElementById(value.table+"_"+value.column);                    
-                    var context = canvas.getContext('2d');
-                    context.clearRect(0, 0, canvas.width, canvas.height);
-                    generateImage();
+                    
+                    if($location.path() === '/canvas')
+                    {
+                        var canvas = document.getElementById(value.table+"_"+value.column);                    
+                        var w = canvas.width;
+                        canvas.width = 10;
+                        canvas.width = w;
+                    }
                 }
-            });
+            });            
         }
         
         
